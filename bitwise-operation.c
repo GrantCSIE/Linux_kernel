@@ -31,9 +31,26 @@ XOR   32(0010 0000)  = ' ' =   32(0010 0000)
 #include<stdio.h>
 #include<stdlib.h>
 
+void swap(int *x, int *y){
+    *x = *x ^ *y;
+    *y = *x ^ *y;
+    *x = *x ^ *y;
+}
 
-int main(){
+void L2U_test(){
     printf("%c\n", L2U('A'));
     printf("%c\n", U2L('a'));
+}
+
+void swap_test(){
+    int *x, *y;
+    *x = 3; *y = 4;
+    swap(x, y);
+    printf("x = %d, y = %d\n", *x, *y);
+}
+
+int main(){
+    L2U_test();
+    swap_test();
     return 0;
 }
