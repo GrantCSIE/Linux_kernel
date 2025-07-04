@@ -34,19 +34,44 @@ int abs_branchless(int *a){
 */
 
 int main(){
+    struct timespec start, end;
     int a = 1; int b = -1;
-    clock_t begin = clock();
+    clock_gettime(CLOCK_MONOTONIC, &start);
     a = abs_branch(&a);
     b = abs_branch(&b);
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("a = %d, b = %d, with branch: %f\n", a, b, time_spent);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double time_spent = (double)(end.tv_nsec - start.tv_nsec);
+    printf("a = %d, b = %d, with branch: %f nsec\n", a, b, time_spent);
     a = 1; b = -1;
-    begin = clock();
+    clock_gettime(CLOCK_MONOTONIC, &start);
     a = abs_branchless(&a);
     b = abs_branchless(&b);
-    end = clock();
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("a = %d, b = %d,without branch: %f\n", a, b, time_spent);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    time_spent = (double)(end.tv_nsec - start.tv_nsec);
+    printf("a = %d, b = %d, without branch: %f nsec\n", a, b, time_spent);
     return 0;
 }
+// 
+/*
+branch operation will spend more time than branchless operation, 
+    which will be easier to find the confidential info. by Timing Attack.
+
+Details of the code:
+    int clock_gettime(clockid_t clk_id, struct timespec *tp);
+
+    clockid_t:
+        CLOCK_REALTIME
+            System-wide realtime clock. Setting this clock requires appropriate privileges.
+        CLOCK_MONOTONIC
+            Clock that cannot be set and represents monotonic time since some unspecified starting point.
+        CLOCK_PROCESS_CPUTIME_ID
+            High-resolution per-process timer from the CPU.
+        CLOCK_THREAD_CPUTIME_ID
+            Thread-specific CPU-time clock.
+
+    timespec:
+        struct timespec {
+            time_t   tv_sec;       // seconds 
+            long     tv_nsec;      // nanoseconds
+        };
+*/
