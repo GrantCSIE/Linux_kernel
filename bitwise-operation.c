@@ -43,10 +43,10 @@ void L2U_test(){
 }
 
 void swap_test(){
-    int *x, *y;
-    *x = 3; *y = 4;
-    swap(x, y);
-    printf("x = %d, y = %d\n", *x, *y);
+    int x, y;
+    x = 3; y = 4;
+    swap(&x, &y);
+    printf("x = %d, y = %d\n", x, y);
 }
 
 int main(){
